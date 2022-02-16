@@ -1,5 +1,6 @@
 import sys
 import subprocess
+from platform import system as system_name
 import re
 import os
 from pprint import pprint
@@ -141,6 +142,13 @@ class CustomTasksType(click.ParamType):
         return sorted(test_files), sorted(tasks_without_tests)
 
 
+def git_push():
+    """
+    Функция вызывает git push для Windows
+    """
+    command = f"git push origin {DEFAULT_BRANCH}"
+    result = subprocess.run(command, shell=True)
+
 
 def call_command(command, verbose=True, return_stdout=False, return_stderr=False):
     """
@@ -245,7 +253,12 @@ def send_tasks_to_check(passed_tasks, git_add_all=False):
     if git_add_all:
         call_command("git add .")
     call_command(f'git commit -m "{message}"')
-    call_command(f"git push origin {DEFAULT_BRANCH}")
+    windows = True if system_name().lower() == "windows" else False
+
+    if windows:
+        git_push()
+    else:
+        call_command(f"git push origin {DEFAULT_BRANCH}")
 
     repo = get_repo()
     last = post_comment_to_last_commit(message, repo)
