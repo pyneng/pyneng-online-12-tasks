@@ -134,7 +134,7 @@ class CustomTasksType(click.ParamType):
                 self.fail(
                     red(
                         f"Данный формат не поддерживается {task}. "
-                        "Допустимые форматы: 1, 1a, 1b-d, 1*, 1-3"
+                        "Допустимые форматы: 1,1a,1b-d,2*,3-5"
                     )
                 )
         tasks_with_tests = set([test.replace("test_", "") for test in test_files])
